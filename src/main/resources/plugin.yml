@@ -1,0 +1,6 @@
+name: BAuth-Hide-Location
+version: ${project.version}
+main: ru.baronessdev.free.hidelocation.HideLocation
+depend: [ BaronessAuth ]
+authors: [ Black_Baroness ]
+website: baronessdev.ru

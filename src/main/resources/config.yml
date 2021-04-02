@@ -1,0 +1,10 @@
+useCommand: true
+command: spawn {player}
+
+# игрок телепортируется на указанные координаты, если useCommand выключен
+world: world
+x: 100.0
+y: 100.0
+z: 100.0
+yaw: 0
+pitch: 0
