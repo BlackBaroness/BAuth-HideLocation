@@ -10,18 +10,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.baronessdev.paid.auth.api.AuthQueryManagerAPI;
+import ru.baronessdev.paid.auth.api.AuthSessionManagerAPI;
+import ru.baronessdev.paid.auth.api.BaronessAuthAPI;
 import ru.baronessdev.paid.auth.api.events.AuthPlayerLoginEvent;
-import ru.baronessdev.paid.auth.api.events.BaronessAuthAPI;
-import ru.baronessdev.paid.auth.manager.JoinQueryManager;
-import ru.baronessdev.paid.auth.manager.SessionManager;
 
 import java.io.File;
-import java.io.IOException;
 
 public final class HideLocation extends JavaPlugin implements Listener {
 
-    private JoinQueryManager queryManager;
-    private SessionManager sessionManager;
+    private AuthQueryManagerAPI queryManager;
+    private AuthSessionManagerAPI sessionManager;
     private YamlConfiguration data;
     private File file;
     private Location spawn;
@@ -50,7 +49,7 @@ public final class HideLocation extends JavaPlugin implements Listener {
     private void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if (!data.contains(p.getName().toLowerCase())) return; // игроку некуда возвращаться - пропускаем
-        if (sessionManager.getSession(p)) {
+        if (sessionManager.hasSession(p)) {
             back(p);
             return;
         }
@@ -74,7 +73,7 @@ public final class HideLocation extends JavaPlugin implements Listener {
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        if (queryManager.isInQuery(p) != null) return; // игрок не авторизован - пропускаем
+        if (queryManager.getQuery(p) != null) return; // игрок не авторизован - пропускаем
 
         data.set(p.getName().toLowerCase(), p.getLocation());
         save();
@@ -89,8 +88,7 @@ public final class HideLocation extends JavaPlugin implements Listener {
             synchronized (HideLocation.class) {
                 try {
                     data.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
             }
         });
