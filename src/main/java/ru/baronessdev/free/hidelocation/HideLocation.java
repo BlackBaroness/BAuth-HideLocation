@@ -24,6 +24,7 @@ public final class HideLocation extends JavaPlugin implements Listener {
     private YamlConfiguration data;
     private File file;
     private Location spawn;
+    private boolean disabling = false;
 
     @Override
     public void onEnable() {
@@ -73,10 +74,20 @@ public final class HideLocation extends JavaPlugin implements Listener {
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        if (queryManager.getQuery(p) != null) return; // игрок не авторизован - пропускаем
+        savePlayer(p);
+    }
+
+    private void savePlayer(Player p) {
+        if (queryManager.getQuery(p) != null) return;
 
         data.set(p.getName().toLowerCase(), p.getLocation());
         save();
+    }
+
+    @Override
+    public void onDisable() {
+        disabling = true;
+        Bukkit.getOnlinePlayers().forEach(this::savePlayer);
     }
 
     private void back(Player p) {
@@ -84,13 +95,24 @@ public final class HideLocation extends JavaPlugin implements Listener {
     }
 
     private void save() {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+        Expression e = () -> {
             synchronized (HideLocation.class) {
                 try {
                     data.save(file);
                 } catch (Exception ignored) {
                 }
             }
-        });
+        };
+
+
+        if (disabling) {
+            e.execute();
+        } else {
+            Bukkit.getScheduler().runTaskAsynchronously(this, e::execute);
+        }
+    }
+
+    interface Expression {
+        void execute();
     }
 }
