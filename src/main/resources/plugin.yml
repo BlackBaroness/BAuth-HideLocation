@@ -1,4 +1,4 @@
-name: BAuth-Hide-Location
+name: AuthHideLocation
 version: ${project.version}
 main: ru.baronessdev.free.hidelocation.HideLocation
 depend: [ BaronessAuth ]
