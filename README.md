@@ -1,9 +1,9 @@
-BAuth Hide Location - простой, но полезный аддон, написанный с использованием BaronessAuth API v200+
+![LastCommit](https://img.shields.io/github/last-commit/BlackBaroness/BAuth-HideLocation?color=8b00ff)
+![LinesOfCode](https://img.shields.io/tokei/lines/github/BlackBaroness/BAuth-HideLocation?color=8b00ff)
 
-Он позволяет телепортировать игроков на спавн для ввода пароля, а потом телепортировать обратно. Вы можете настроить в
-конфигурации как телепортацию с помощью консольной команды, так и на конкретные координаты
+Download for free: https://market.baronessdev.ru/shop/hidelocation.7/
 
-Есть поддержка сохранения сессии
+![FoodPlus stats](https://bstats.org/signatures/bukkit/BAuth-HideLocation.svg)
 
 # Сборка
 1. Изменить путь к артефакту ```ru.baronessdev.paid.auth:BaronessAuth``` в ```pom.xml``` на свой, указав файл BaronessAuth последней версии;
