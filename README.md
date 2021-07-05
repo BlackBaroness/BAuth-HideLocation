@@ -3,8 +3,8 @@
 
 Download for free: https://market.baronessdev.ru/shop/hidelocation.7/
 
-![FoodPlus stats](https://bstats.org/signatures/bukkit/BAuth-HideLocation.svg)
+![Bauth-HideLocation stats](https://bstats.org/signatures/bukkit/BAuth-HideLocation.svg)
 
 # Сборка
-1. Изменить путь к артефакту ```ru.baronessdev.paid.auth:BaronessAuth``` в ```pom.xml``` на свой, указав файл BaronessAuth последней версии;
-2. Выполнить mvn package;
+1. Использовать скрипт update.sh
+1. Выполнить mvn package;

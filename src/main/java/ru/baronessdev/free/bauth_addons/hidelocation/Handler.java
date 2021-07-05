@@ -6,18 +6,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import ru.baronessdev.paid.auth.api.AuthSessionManagerAPI;
-import ru.baronessdev.paid.auth.api.BaronessAuthAPI;
 import ru.baronessdev.paid.auth.api.events.AuthPlayerLoginEvent;
 import ru.baronessdev.paid.auth.api.events.AuthPlayerPreLoginEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Handler implements Listener {
 
     private final HideLocation plugin;
     private final Location spawn;
+    public List<Player> teleportBypass = new ArrayList<>();
 
     public Handler(HideLocation plugin, Location spawn) {
         this.plugin = plugin;
@@ -27,8 +28,9 @@ public class Handler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     private void onJoin(AuthPlayerPreLoginEvent e) {
         Player p = e.getPlayer();
-        if (!plugin.data.contains(p.getName().toLowerCase())) return; // игроку некуда возвращаться - пропускаем
+        if (!plugin.getData().contains(p.getName().toLowerCase())) return; // игроку некуда возвращаться - пропускаем
 
+        teleportBypass.add(p);
         if (spawn == null) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getConfig().getString("command").replace("{player}", p.getName()));
             return;
@@ -40,21 +42,27 @@ public class Handler implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     private void onLogin(AuthPlayerLoginEvent event) {
         Player p = event.getPlayer();
-        if (!plugin.data.contains(p.getName().toLowerCase())) return; // игроку некуда возвращаться - пропускаем
-        plugin.back(p);
+        if (!plugin.getData().contains(p.getName().toLowerCase())) return; // игроку некуда возвращаться - пропускаем
+        back(p);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerTeleport(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
-        if (plugin.teleportBypass.contains(p)) {
+        if (teleportBypass.contains(p)) {
             e.setCancelled(false);
-            plugin.teleportBypass.remove(p);
+            teleportBypass.remove(p);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onQuit(PlayerQuitEvent event) {
         plugin.savePlayer(event.getPlayer());
+    }
+
+    public void back(Player p) {
+        Location location = (Location) plugin.getData().get(p.getName().toLowerCase());
+        teleportBypass.add(p);
+        p.teleport(location);
     }
 }

@@ -20,11 +20,9 @@ import java.util.List;
 
 public final class HideLocation extends JavaPlugin implements Listener {
 
-    public YamlConfiguration data;
+    private YamlConfiguration data;
     private File file;
     private boolean disabling;
-
-    public List<Player> teleportBypass = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -61,12 +59,6 @@ public final class HideLocation extends JavaPlugin implements Listener {
         save();
     }
 
-    public void back(Player p) {
-        Location location = (Location) data.get(p.getName().toLowerCase());
-        teleportBypass.add(p);
-        p.teleport(location);
-    }
-
     public void save() {
         Expression e = () -> {
             synchronized (HideLocation.class) {
@@ -85,20 +77,26 @@ public final class HideLocation extends JavaPlugin implements Listener {
         }
     }
 
+    public YamlConfiguration getData() {
+        return data;
+    }
+
     interface Expression {
         void execute();
     }
 
     private void checkUpdates() {
-        try {
-            int i = UpdateCheckerUtil.check(this);
-            if (i != -1) {
-                Logger.log(LogType.INFO, "New version found: v" + ChatColor.YELLOW + i + ChatColor.GRAY + " (Current: v" + getDescription().getVersion() + ")");
-                Logger.log(LogType.INFO, "Update now: " + ChatColor.AQUA + "market.baronessdev.ru/shop/licenses/");
+        new Thread(() -> {
+            try {
+                int i = UpdateCheckerUtil.check(this);
+                if (i != -1) {
+                    Logger.log(LogType.INFO, "New version found: v" + ChatColor.YELLOW + i + ChatColor.GRAY + " (Current: v" + getDescription().getVersion() + ")");
+                    Logger.log(LogType.INFO, "Update now: " + ChatColor.AQUA + "market.baronessdev.ru/shop/licenses/");
+                }
+            } catch (UpdateCheckerUtil.UpdateCheckException e) {
+                Logger.log(LogType.ERROR, "Could not check for updates: " + e.getRootCause());
+                Logger.log(LogType.ERROR, "Please contact Baroness's Dev if this isn't your mistake.");
             }
-        } catch (UpdateCheckerUtil.UpdateCheckException e) {
-            Logger.log(LogType.ERROR, "Could not check for updates: " + e.getRootCause());
-            Logger.log(LogType.ERROR, "Please contact Baroness's Dev if this isn't your mistake.");
-        }
+        }).start();
     }
 }

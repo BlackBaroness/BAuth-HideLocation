@@ -6,7 +6,7 @@
 
     <groupId>ru.baronessdev.free.bauth_addons.hidelocation</groupId>
     <artifactId>HideLocation</artifactId>
-    <version>13</version>
+    <version>14</version>
     <packaging>jar</packaging>
 
     <name>BAuth-HideLocation</name>
@@ -71,20 +71,12 @@
     </repositories>
 
     <dependencies>
+        <!--suppress MavenVersionUpdateInspection -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ru.baronessdev.paid.auth</groupId>
-            <artifactId>BaronessAuth</artifactId>
-            <version>LATEST</version>
-            <scope>system</scope>
-            <systemPath>
-                /home/baroness/Рабочий стол/BaronessAuth.jar
-            </systemPath>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
@@ -96,6 +88,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.baronessdev.paid.auth</groupId>
+            <artifactId>BaronessAuthAPI</artifactId>
+            <version>LATEST</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/BaronessAuthAPI.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
