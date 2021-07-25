@@ -2,21 +2,15 @@ package ru.baronessdev.free.bauth_addons.hidelocation;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.baronessdev.free.bauth_addons.hidelocation.util.UpdateCheckerUtil;
-import ru.baronessdev.free.bauth_addons.hidelocation.util.logging.LogType;
-import ru.baronessdev.free.bauth_addons.hidelocation.util.logging.Logger;
 import ru.baronessdev.paid.auth.api.BaronessAuthAPI;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class HideLocation extends JavaPlugin implements Listener {
 
@@ -43,7 +37,9 @@ public final class HideLocation extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(new Handler(this, spawn), this);
         new Metrics(this, 11439);
-        checkUpdates();
+
+        // not now
+        //BaronessCloud.getInstance(this).addUpdateHandler(this, UpdateHandlerFactory.createDefault(this));
     }
 
     @Override
@@ -59,8 +55,17 @@ public final class HideLocation extends JavaPlugin implements Listener {
         save();
     }
 
+    /*
+    Asynchronous writing of data to a YAML file.
+    The synchronization block is needed because saving in full asynchronous causes exceptions.
+    But this method correctly calls the Bukkit Async Task.
+
+    Why save it in runtime?
+    Because we don't want problems for customers if they lose data.
+     */
+
     public void save() {
-        Expression e = () -> {
+        Runnable r = () -> {
             synchronized (HideLocation.class) {
                 try {
                     data.save(file);
@@ -69,34 +74,15 @@ public final class HideLocation extends JavaPlugin implements Listener {
             }
         };
 
-        // асинхронное сохранение файла, если сервер не выключается
+        // registering Bukkit Task while disabling is impossible so we need check
         if (disabling) {
-            e.execute();
+            r.run();
         } else {
-            Bukkit.getScheduler().runTaskAsynchronously(this, e::execute);
+            Bukkit.getScheduler().runTaskAsynchronously(this, r);
         }
     }
 
     public YamlConfiguration getData() {
         return data;
-    }
-
-    interface Expression {
-        void execute();
-    }
-
-    private void checkUpdates() {
-        new Thread(() -> {
-            try {
-                int i = UpdateCheckerUtil.check(this);
-                if (i != -1) {
-                    Logger.log(LogType.INFO, "New version found: v" + ChatColor.YELLOW + i + ChatColor.GRAY + " (Current: v" + getDescription().getVersion() + ")");
-                    Logger.log(LogType.INFO, "Update now: " + ChatColor.AQUA + "market.baronessdev.ru/shop/licenses/");
-                }
-            } catch (UpdateCheckerUtil.UpdateCheckException e) {
-                Logger.log(LogType.ERROR, "Could not check for updates: " + e.getRootCause());
-                Logger.log(LogType.ERROR, "Please contact Baroness's Dev if this isn't your mistake.");
-            }
-        }).start();
     }
 }

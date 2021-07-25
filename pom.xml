@@ -6,7 +6,7 @@
 
     <groupId>ru.baronessdev.free.bauth_addons.hidelocation</groupId>
     <artifactId>HideLocation</artifactId>
-    <version>14</version>
+    <version>15</version>
     <packaging>jar</packaging>
 
     <name>BAuth-HideLocation</name>
@@ -67,6 +67,10 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
