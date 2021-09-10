@@ -8,6 +8,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.baronessdev.lib.cloud.BaronessCloud;
+import ru.baronessdev.lib.cloud.downloader.BaronessCloudDownloader;
+import ru.baronessdev.lib.cloud.update.UpdateHandlerFactory;
 import ru.baronessdev.paid.auth.api.BaronessAuthAPI;
 
 import java.io.File;
@@ -38,8 +41,10 @@ public final class HideLocation extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new Handler(this, spawn), this);
         new Metrics(this, 11439);
 
-        // not now
-        //BaronessCloud.getInstance(this).addUpdateHandler(this, UpdateHandlerFactory.createDefault(this));
+        BaronessCloudDownloader.call(() -> {
+            BaronessCloud baronessCloud = BaronessCloud.getInstance().addPlugin(this);
+            baronessCloud.addUpdateHandler(this, UpdateHandlerFactory.createDefault(this));
+        });
     }
 
     @Override

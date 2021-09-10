@@ -89,16 +89,24 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
+            <groupId>com.github.Baroness-s-Dev</groupId>
+            <artifactId>BaronessCloud-Downloader</artifactId>
+            <version>dbab10d</version>
         </dependency>
+
         <dependency>
             <groupId>ru.baronessdev.paid.auth</groupId>
             <artifactId>BaronessAuthAPI</artifactId>
             <version>LATEST</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/BaronessAuthAPI.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>ru.baronessdev.lib</groupId>
+            <artifactId>cloud</artifactId>
+            <version>unknown</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/BaronessCloud.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
