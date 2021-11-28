@@ -1,6 +1,6 @@
 name: BAuth-HideLocation
 version: ${project.version}
-main: ru.baronessdev.free.bauth_addons.hidelocation.HideLocation
+main: ru.baronessdev.free.auth.addons.hidelocation.HideLocation
 depend: [ BaronessAuth ]
 authors: [ Black_Baroness ]
 website: https://market.baronessdev.ru/shop/hidelocation.7/

@@ -7,4 +7,4 @@ Download for free: https://market.baronessdev.ru/shop/hidelocation.7/
 
 # Сборка
 1. Использовать скрипт update.sh
-1. Выполнить mvn package;
+1. Выполнить `mvn package`;
